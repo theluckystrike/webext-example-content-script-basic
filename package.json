@@ -1,0 +1,18 @@
+{
+  "name": "webext-example-content-script-basic",
+  "version": "1.0.0",
+  "description": "A Chrome extension demonstrating content script injection",
+  "author": "Zovo <hello@zovo.one>",
+  "license": "MIT",
+  "scripts": {
+    "build": "echo 'No build required'",
+    "test": "echo 'No tests yet'"
+  },
+  "keywords": [
+    "chrome-extension",
+    "content-script",
+    "tutorial",
+    "beginner",
+    "manifest-v3"
+  ]
+}

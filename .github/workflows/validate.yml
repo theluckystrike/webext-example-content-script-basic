@@ -1,0 +1,51 @@
+name: Validate Extension
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Validate manifest.json
+        run: |
+          cat src/manifest.json | python3 -m json.tool > /dev/null
+          echo "✓ manifest.json is valid JSON"
+          
+      - name: Check required fields
+        run: |
+          python3 << 'EOF'
+          import json
+          import sys
+          
+          with open('src/manifest.json') as f:
+              manifest = json.load(f)
+          
+          if 'content_scripts' not in manifest:
+              print("✗ Missing content_scripts")
+              sys.exit(1)
+          
+          cs = manifest['content_scripts'][0]
+          if 'js' not in cs:
+              print("✗ Missing js in content_scripts")
+              sys.exit(1)
+          
+          print("✓ Content script configured")
+          print(f"  - Matches: {cs.get('matches', [])}")
+          print(f"  - JS files: {cs.get('js', [])}")
+          EOF
+          
+      - name: Verify content script files exist
+        run: |
+          if [ -f "src/content.js" ]; then
+            echo "✓ content.js present"
+          else
+            echo "✗ Missing content.js"
+            exit 1
+          fi
